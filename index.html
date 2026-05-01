@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masterclass: Arquitectura de Holding Corporativo</title>
+    <style>
+        :root {
+            --primary: #0f172a;
+            --secondary: #1e293b;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --bg-light: #f8fafc;
+            --text-main: #334155;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --gold: #d97706;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            border-bottom: 5px solid var(--accent);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .header-boxes {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 2rem auto 0;
+            flex-wrap: wrap;
+        }
+
+        .header-box {
+            background: var(--secondary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--gold);
+            flex: 1;
+            min-width: 300px;
+            text-align: left;
+        }
+
+        /* Layout */
+        .container {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            gap: 2rem;
+        }
+
+        /* Sidebar Navigation */
+        aside {
+            width: 300px;
+            flex-shrink: 0;
+        }
+
+        .sticky-nav {
+            position: sticky;
+            top: 2rem;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            max-height: calc(100vh - 4rem);
+            overflow-y: auto;
+        }
+
+        .sticky-nav h3 {
+            margin-bottom: 1rem;
+            color: var(--primary);
+            font-size: 1.1rem;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+
+        .sticky-nav ul {
+            list-style: none;
+        }
+
+        .sticky-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sticky-nav a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            display: block;
+            padding: 0.5rem;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .sticky-nav a:hover {
+            background: var(--bg-light);
+            color: var(--accent);
+            padding-left: 1rem;
+        }
+
+        /* Main Content */
+        main {
+            flex-grow: 1;
+            min-width: 0;
+        }
+
+        section {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            margin-bottom: 2rem;
+            scroll-margin-top: 2rem;
+        }
+
+        h2 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        h3 {
+            color: var(--accent);
+            margin: 1.5rem 0 1rem;
+            font-size: 1.3rem;
+        }
+
+        h4 {
+            color: var(--secondary);
+            margin: 1rem 0 0.5rem;
+        }
+
+        p,
+        ul,
+        ol {
+            margin-bottom: 1rem;
+        }
+
+        ul,
+        ol {
+            padding-left: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Callouts / Quotes */
+        .quote-box {
+            background: #eff6ff;
+            border-left: 4px solid var(--accent);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+            font-style: italic;
+            font-size: 1.1rem;
+            color: var(--primary);
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: white;
+        }
+
+        th,
+        td {
+            border: 1px solid var(--border);
+            padding: 1rem;
+            text-align: left;
+        }
+
+        th {
+            background: var(--bg-light);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Script/Chat Formatting */
+        .script-voz {
+            background: #f8fafc;
+            padding: 1rem;
+            border-left: 3px solid #64748b;
+            margin-bottom: 1rem;
+            font-family: monospace;
+            font-size: 1.05rem;
+        }
+
+        .script-chat {
+            background: #f0fdf4;
+            padding: 1rem;
+            border-left: 3px solid #22c55e;
+            margin-bottom: 1.5rem;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .chat-label {
+            font-weight: bold;
+            color: #166534;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .voz-label {
+            font-weight: bold;
+            color: #334155;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Interactive Checklist */
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            padding: 8px;
+            background: var(--bg-light);
+            border-radius: 6px;
+        }
+
+        .checklist-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .tag {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .container {
+                flex-direction: column;
+            }
+
+            aside {
+                width: 100%;
+            }
+
+            .sticky-nav {
+                position: static;
+                max-height: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>MASTERCLASS: Arquitectura de Holding Corporativo en México</h1>
+        <p style="font-size: 1.2rem; color: #cbd5e1;">Guía de Estudio y Operación Interna</p>
+
+        <div class="header-boxes">
+            <div class="header-box">
+                <h3 style="color: var(--gold); margin-bottom: 0.5rem;">🎯 Promesa de la Masterclass</h3>
+                <p>"Aprende a estructurar un holding corporativo en México para proteger tu patrimonio, escalar
+                    operaciones y preparar la sucesión con gobierno corporativo y cumplimiento real."</p>
+            </div>
+            <div class="header-box">
+                <h3 style="color: var(--gold); margin-bottom: 0.5rem;">👥 Audiencia Objetivo</h3>
+                <ul style="margin-left: 1rem;">
+                    <li>Empresarios y dueños de empresas familiares</li>
+                    <li>Directores/gerentes administrativos y financieros</li>
+                    <li>Socios inversionistas y fundadores</li>
+                    <li>Contadores y abogados corporativos que asesoran grupos</li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <aside>
+            <nav class="sticky-nav">
+                <h3>Índice Temático</h3>
+                <ul>
+                    <li><a href="#parte1">Parte 1: Mapa de la Sesión</a></li>
+                    <li><a href="#parte2">Parte 2: Contenido por Bloque</a></li>
+                    <li><a href="#parte3">Parte 3: Índice de Diapositivas</a></li>
+                    <li><a href="#parte4">Parte 4: Interacción en Teams</a></li>
+                    <li><a href="#parte5">Parte 5: Respuestas en Chat</a></li>
+                    <li><a href="#parte6">Parte 6: Checklist de Implementación</a></li>
+                    <li><a href="#parte7">Parte 7: Los 10 Errores Frecuentes</a></li>
+                    <li><a href="#parte8">Parte 8: Ruta 30-60-90 Días</a></li>
+                    <li><a href="#parte9">Parte 9: Marco Legal</a></li>
+                    <li><a href="#parte10">Parte 10: Embudo y Diplomado</a></li>
+                    <li><a href="#frases">Resumen: Frases Clave</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main>
+            <!-- PARTE 1 -->
+            <section id="parte1">
+                <h2>PARTE 1 — Mapa de la Sesión (3 Horas Intensivas)</h2>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td><strong>BLOQUE 1</strong></td>
+                            <td>La Lógica del Legado</td>
+                            <td>30 min</td>
+                        </tr>
+                        <tr>
+                            <td><strong>BLOQUE 2</strong></td>
+                            <td>Arquitectura del Holding en México</td>
+                            <td>60 min</td>
+                        </tr>
+                        <tr>
+                            <td><strong>BLOQUE 3</strong></td>
+                            <td>Gobierno Corporativo</td>
+                            <td>45 min</td>
+                        </tr>
+                        <tr>
+                            <td><strong>BLOQUE 4</strong></td>
+                            <td>Fiscal y Operación</td>
+                            <td>60 min</td>
+                        </tr>
+                        <tr>
+                            <td><strong>BLOQUE 5</strong></td>
+                            <td>Cumplimiento 2022–2025 <br><small>(Beneficiario Controlador + LFPIORPI)</small></td>
+                            <td>45 min</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- PARTE 2 -->
+            <section id="parte2">
+                <h2>PARTE 2 — Contenido Clave por Bloque</h2>
+
+                <h3>BLOQUE 1 | La Lógica del Legado (30 min)</h3>
+                <p><strong>Idea Central:</strong> Legado ≠ herencia. Legado = estructura + reglas + continuidad.</p>
+                <h4>5 Problemas típicos sin holding:</h4>
+                <ol>
+                    <li>Confusión de activos personales y empresariales</li>
+                    <li>Pleitos familiares por falta de reglas</li>
+                    <li>Riesgo laboral y fiscal en cascada</li>
+                    <li>Falta de claridad accionaria</li>
+                    <li>Imposibilidad de escalar o vender ordenadamente</li>
+                </ol>
+                <h4>Qué resuelve un holding:</h4>
+                <ul>
+                    <li>Control y gobierno claro</li>
+                    <li>Sucesión ordenada</li>
+                    <li>Atracción de inversión</li>
+                    <li>Separación de riesgos</li>
+                </ul>
+                <p><strong>Dinámica del Bloque:</strong> "Diagnóstico Express" — 5 preguntas para que el alumno
+                    identifique si ya opera como grupo aunque no esté estructurado.</p>
+                <div class="quote-box">"Tu empresa puede ya ser un grupo sin saberlo. La diferencia está en si está
+                    diseñado o improvisado."</div>
+
+                <hr style="margin: 2rem 0; border: 1px solid var(--border);">
+
+                <h3>BLOQUE 2 | Arquitectura del Holding en México (60 min)</h3>
+                <p><strong>Idea Central:</strong> Un holding NO es un tipo de sociedad. Es una estructura de propiedad y
+                    control.</p>
+                <h4>Vehículos Jurídicos Comunes (bajo LGSM):</h4>
+                <ul>
+                    <li><strong>S.A. de C.V.</strong> — la más usada, fácil de administrar</li>
+                    <li><strong>S. de R.L. de C.V.</strong> — flexible para grupos cerrados</li>
+                    <li><strong>SAPI</strong> — ideal para entrada de inversión o capital privado</li>
+                </ul>
+
+                <h4>Diferencia Clave:</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>EMPRESA OPERATIVA</th>
+                            <th>EMPRESA PATRIMONIAL</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Contrata personal</td>
+                            <td>Tiene los activos valiosos</td>
+                        </tr>
+                        <tr>
+                            <td>Factura al cliente</td>
+                            <td>Marca, inmueble, IP</td>
+                        </tr>
+                        <tr>
+                            <td>Tiene el riesgo laboral</td>
+                            <td>Sin empleados directos</td>
+                        </tr>
+                        <tr>
+                            <td>No tiene activos fijos</td>
+                            <td>Arrendadora / licenciante</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4>Reglas de oro del holding bien hecho:</h4>
+                <ol>
+                    <li>Activos valiosos FUERA de la empresa operativa</li>
+                    <li>Contratos intragrupo claros, documentados y con fecha cierta</li>
+                    <li>Gobierno corporativo desde el día 1, no "después"</li>
+                </ol>
+                <p><strong>Conceptos para dominar:</strong> Fusión / Escisión / Transformación (LGSM), Holding puro vs.
+                    holding mixto, Shared services (servicios compartidos).</p>
+                <div class="quote-box">"Los activos que generan valor no deben estar donde está el riesgo."</div>
+
+                <hr style="margin: 2rem 0; border: 1px solid var(--border);">
+
+                <h3>BLOQUE 3 | Gobierno Corporativo (45 min)</h3>
+                <p><strong>Idea Central:</strong> Un holding sin reglas internas es solo un organigrama. El gobierno
+                    corporativo controla escenarios futuros, no personas.</p>
+                <h4>Documentos típicos del gobierno:</h4>
+                <ol>
+                    <li><strong>Pacto de Socios / Acuerdo de Accionistas:</strong> Reglas de voto y quórum, Derechos de
+                        arrastre (drag-along) y acompañamiento (tag-along), Restricciones de transferencia, Valuación
+                        ante salida, Cláusulas de no competencia.</li>
+                    <li><strong>Protocolo Familiar (cuando aplica):</strong> Reglas para empleo de familiares, Sucesión
+                        del control, Distribución de dividendos, Mecanismos de resolución de conflictos.</li>
+                    <li><strong>Políticas de Dividendos y Reinversión:</strong> Criterios claros, no discrecionales.
+                    </li>
+                </ol>
+
+                <h4>Estructura de Decisión (Dinámica del bloque):</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>FAMILIA</th>
+                            <th>CONSEJO</th>
+                            <th>DIRECTOR GENERAL</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Grandes definiciones de legado</td>
+                            <td>Estrategia y supervisión financiera</td>
+                            <td>Operación diaria y ejecución</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="quote-box">"El gobierno corporativo no controla personas. Controla escenarios futuros."
+                </div>
+
+                <hr style="margin: 2rem 0; border: 1px solid var(--border);">
+
+                <h3>BLOQUE 4 | Fiscal y Operación — Cómo se mueve el dinero (60 min)</h3>
+                <p><strong>Idea Central:</strong> Lo que más auditan: los flujos de dinero entre empresas del mismo
+                    grupo.</p>
+                <h4>Contratos Intragrupo Mínimos (Indispensables):</h4>
+                <ol>
+                    <li>Prestación de servicios administrativos (shared services)</li>
+                    <li>Licencia de marca / regalías (si hay IP en la patrimonial)</li>
+                    <li>Arrendamiento (si el inmueble está en la patrimonial)</li>
+                    <li>Préstamo intercompañía (si hay fondeo entre empresas)</li>
+                    <li>NDA y políticas internas de confidencialidad</li>
+                </ol>
+
+                <h4>Régimen Opcional para Grupos de Sociedades (ISR):</h4>
+                <ul>
+                    <li>Permite a un grupo diferir parte del ISR hasta por 3 años</li>
+                    <li>Requiere autorización previa del SAT</li>
+                    <li>Requisito central: integradora con más del 80% de acciones con derecho a voto de las integradas
+                        (directo o indirecto)</li>
+                    <li>Base legal: LISR Art. 59–71</li>
+                </ul>
+                <div class="script-voz">
+                    <span class="voz-label">MENSAJE CLAVE EN LA SESIÓN:</span>
+                    "El régimen de grupos no es para pagar menos. Es para administrar el impuesto dentro de una lógica
+                    de grupo con control formal y cumplimiento real."
+                </div>
+
+                <h4>Blindaje Obligatorio:</h4>
+                <p>Siempre decir: <em>"Planeación fiscal ≠ simulación. Todo debe documentarse y tener razón de
+                        negocios."</em></p>
+
+                <h4>Los 3 elementos de la Materialidad:</h4>
+                <ol>
+                    <li>Personal propio en quien presta el servicio</li>
+                    <li>Funciones claramente definidas</li>
+                    <li>Evidencia operativa: reportes, correos, entregables</li>
+                </ol>
+
+                <p><strong>Fecha Cierta — Por qué importa:</strong> Un contrato sin fecha cierta NO es ilegal, pero para
+                    una autoridad SIMPLEMENTE NO EXISTE.</p>
+                <div class="quote-box">"La razón de negocios no se improvisa en una auditoría. Se construye antes."
+                </div>
+
+                <hr style="margin: 2rem 0; border: 1px solid var(--border);">
+
+                <h3>BLOQUE 5 | Cumplimiento Crítico 2022–2025 (45 min)</h3>
+                <p><em>Gran diferenciador de esta Masterclass. Este bloque es lo que pocas personas enseñan con
+                        profundidad.</em></p>
+
+                <h4>5.1 Beneficiario Controlador (CFF)</h4>
+                <ul>
+                    <li><strong>Qué es:</strong> Desde 2022, las personas morales deben obtener, conservar y
+                        proporcionar al SAT información fidedigna y actualizada sobre quién controla la empresa en
+                        última instancia.</li>
+                    <li><strong>Por qué es crítico en un holding:</strong> Las cadenas de propiedad y control = foco
+                        rojo si no tienes expedientes completos de quién manda y quién se beneficia.</li>
+                    <li><strong>Qué debe contener el expediente:</strong> Identificación de la persona física que ejerce
+                        el control final, Porcentajes de participación en cada nivel, Documentos actualizados,
+                        Procedimientos internos para mantenerlo vigente.</li>
+                </ul>
+
+                <h4>5.2 Reforma LFPIORPI (16-jul-2025)</h4>
+                <ul>
+                    <li><strong>Qué es:</strong> Ley Federal para la Prevención e Identificación de Operaciones con
+                        Recursos de Procedencia Ilícita (anti-lavado).</li>
+                    <li><strong>Reforma 2025:</strong> Actualizó obligaciones de prevención, añadió cambios vinculados
+                        al beneficiario controlador e impacta registros ante Secretaría de Economía.</li>
+                </ul>
+                <div class="script-voz">
+                    <span class="voz-label">MENSAJE PARA ALUMNOS:</span>
+                    "Si estás armando un grupo, tu estructura debe nacer con un expediente de control: quién manda,
+                    quién se beneficia y cómo se prueba."
+                </div>
+                <div class="quote-box">"El holding moderno requiere transparencia corporativa. No es opcional. Es una
+                    obligación legal."</div>
+            </section>
+
+            <!-- PARTE 3 -->
+            <section id="parte3">
+                <h2>PARTE 3 — Índice de 22 Diapositivas</h2>
+                <div style="column-count: 2; column-gap: 2rem;">
+                    <p><span class="tag">Slide 01</span> Título y promesa ("Holding Corporativo en México...")</p>
+                    <p><span class="tag">Slide 02</span> ¿Qué es el legado empresarial? (3 pilares)</p>
+                    <p><span class="tag">Slide 03</span> Por qué mueren los legados (5 fallas)</p>
+                    <p><span class="tag">Slide 04</span> ¿Qué es un holding y qué NO es?</p>
+                    <p><span class="tag">Slide 05</span> Holding patrimonial vs operativo</p>
+                    <p><span class="tag">Slide 06</span> Sociedades bajo LGSM (S.A., S. de R.L., SAPI)</p>
+                    <p><span class="tag">Slide 07</span> Separación de activos y riesgos</p>
+                    <p><span class="tag">Slide 08</span> Caso 1: Grupo familiar con 3 negocios</p>
+                    <p><span class="tag">Slide 09</span> Gobierno corporativo mínimo viable</p>
+                    <p><span class="tag">Slide 10</span> Pacto de socios: cláusulas imprescindibles</p>
+                    <p><span class="tag">Slide 11</span> Protocolo familiar: cuándo sí / cuándo no</p>
+                    <p><span class="tag">Slide 12</span> Contratos intragrupo: lista mínima</p>
+                    <p><span class="tag">Slide 13</span> Flujo de dinero en el grupo</p>
+                    <p><span class="tag">Slide 14</span> Régimen opcional grupos ISR</p>
+                    <p><span class="tag">Slide 15</span> Requisitos clave del régimen de grupos</p>
+                    <p><span class="tag">Slide 16</span> Razón de negocios y evidencia</p>
+                    <p><span class="tag">Slide 17</span> Beneficiario Controlador (CFF)</p>
+                    <p><span class="tag">Slide 18</span> Reforma LFPIORPI 2025</p>
+                    <p><span class="tag">Slide 19</span> Checklist de implementación</p>
+                    <p><span class="tag">Slide 20</span> Los 10 errores más frecuentes</p>
+                    <p><span class="tag">Slide 21</span> Ruta de 30–60–90 días</p>
+                    <p><span class="tag">Slide 22</span> Cierre y Q&A</p>
+                </div>
+            </section>
+
+            <!-- PARTE 4 -->
+            <section id="parte4">
+                <h2>PARTE 4 — Interacción en Teams (Guion)</h2>
+                <p><strong>Principio Estratégico:</strong> Nunca preguntes "¿tienen dudas?". Siempre pregunta algo que
+                    revele necesidad, riesgo o madurez.</p>
+
+                <h4>Apertura (min 0-5)</h4>
+                <div class="script-voz"><span class="voz-label">VOZ:</span> "Bienvenidos. Esta masterclass no es una
+                    conferencia tradicional. Es una sesión de educación + diagnóstico en tiempo real. Vamos a usar el
+                    chat constantemente..."</div>
+                <div class="script-chat"><span class="chat-label">CHAT:</span> 📌 Durante la sesión usaremos el chat
+                    para diagnósticos rápidos. No hay respuestas buenas o malas. Esto NO es asesoría personalizada, es
+                    educación estructural.</div>
+
+                <h4>Pregunta 1 - Segmentación (min 5)</h4>
+                <div class="script-voz"><span class="voz-label">VOZ:</span> "Antes de hablar de holdings, necesito
+                    entender cómo están operando hoy."</div>
+                <div class="script-chat"><span class="chat-label">CHAT:</span> 🟢 Hoy operas principalmente con:<br>1️⃣
+                    Una sola empresa<br>2️⃣ Varias empresas / personas morales<br>3️⃣ Persona física + empresa(s)</div>
+                <p><em>Lectura Interna: 1 = prospecto crecimiento | 2 = prospecto inmediato holding | 3 = análisis
+                        mixto</em></p>
+
+                <h4>Pregunta 2 - Riesgo Patrimonial (min 15)</h4>
+                <div class="script-voz"><span class="voz-label">VOZ:</span> "Muchos empresarios creen que el riesgo está
+                    en el mercado. En realidad, el riesgo suele estar dentro de la estructura."</div>
+                <div class="script-chat"><span class="chat-label">CHAT:</span> 🟢 ¿Tus activos más importantes están en
+                    la MISMA empresa que contrata personal y factura? ✅ Sí / ❌ No / ❓ No estoy seguro</div>
+
+                <h4>Pregunta 3 - Fecha Cierta (min 30)</h4>
+                <div class="script-voz"><span class="voz-label">VOZ:</span> "Aquí viene uno de los temas más ignorados:
+                    fecha cierta. No es formalismo. Es la diferencia entre que un contrato exista o no frente a
+                    terceros."</div>
+                <div class="script-chat"><span class="chat-label">CHAT:</span> 🟢 Los contratos entre tus empresas
+                    están: a) Solo firmados b) Firmados y ratificados c) No existen d) No aplica</div>
+
+                <h4>Pregunta 4 - Razón de Negocios (min 45)</h4>
+                <div class="script-voz"><span class="voz-label">VOZ:</span> "La razón de negocios no es una frase
+                    bonita. Es la explicación económica real de por qué existe una estructura."</div>
+                <div class="script-chat"><span class="chat-label">CHAT:</span> 🟢 Si mañana una autoridad te preguntara:
+                    '¿Por qué existe tu holding o por qué hay cobros entre empresas?' ¿tienes una explicación OPERATIVA
+                    y DOCUMENTADA?</div>
+
+                <h4>Pregunta 5 - Materialidad (min 65)</h4>
+                <div class="script-voz"><span class="voz-label">VOZ:</span> "Materialidad significa que la operación se
+                    puede ver, tocar y probar. No basta con facturar."</div>
+                <div class="script-chat"><span class="chat-label">CHAT:</span> 🟢 La empresa que factura servicios al
+                    grupo tiene: 👥 Personal propio 📊 Funciones claras 📁 Evidencia. ✅ Todo / ⚠️ Algo / ❌ Nada</div>
+
+                <h4>Pregunta 6 - Gobierno Corporativo (min 85)</h4>
+                <div class="script-voz"><span class="voz-label">VOZ:</span> "El gobierno corporativo no es para empresas
+                    grandes. Es para evitar conflictos futuros."</div>
+                <div class="script-chat"><span class="chat-label">CHAT:</span> 🟢 En tu empresa o grupo, las decisiones
+                    importantes se toman por: a) Estatutos b) Costumbre c) La persona que manda d) Depende del día</div>
+
+                <h4>Pregunta 7 - Costo Real (min 110)</h4>
+                <div class="script-voz"><span class="voz-label">VOZ:</span> "Este es el punto que casi nadie explica con
+                    honestidad. Y por eso hay tantas estructuras mal hechas."</div>
+                <div class="script-chat"><span class="chat-label">CHAT:</span> 🟢 ¿Alguien te había explicado con
+                    claridad cuánto cuesta implementar un holding BIEN hecho en México? ✅ Sí / ❌ No</div>
+
+                <h4>Pregunta Final - Autodiagnóstico y Embudo (min 135)</h4>
+                <div class="script-voz"><span class="voz-label">VOZ:</span> "Esta sesión no termina con una venta.
+                    Termina con claridad. Cada quien decide el siguiente paso."</div>
+                <div class="script-chat"><span class="chat-label">CHAT:</span> 🟢 Después de esta masterclass, ¿en qué
+                    punto te identificas?<br>1️⃣ Necesito diagnosticar mi estructura<br>2️⃣ Ya tengo estructura, pero
+                    debo regularizar<br>3️⃣ Aún no lo necesito, pero quiero aprender</div>
+            </section>
+
+            <!-- PARTE 5 -->
+            <section id="parte5">
+                <h2>PARTE 5 — Guion de Respuestas para el Equipo en Chat</h2>
+                <div style="background: var(--bg-light); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                    <strong>Reglas del Equipo:</strong>
+                    <ul>
+                        <li>Nunca diagnosticar en público.</li>
+                        <li>No vender, no cotizar, no prometer.</li>
+                        <li>Todo se responde como estructura, no como opinión ("la práctica común").</li>
+                    </ul>
+                </div>
+
+                <p><strong>P: "¿Todas las empresas deberían tener un holding?"</strong><br>
+                    R: No necesariamente. Un holding tiene sentido cuando hay más de una unidad de negocio, activos
+                    relevantes, riesgos que conviene separar, o planes de crecimiento, sucesión o inversión.</p>
+
+                <p><strong>P: "Si mis contratos no tienen fecha cierta, ¿estoy en problemas?"</strong><br>
+                    R: No significa automáticamente un problema, pero sí implica que esos contratos pueden no ser
+                    defendibles frente a autoridades o terceros. Es un elemento de protección.</p>
+
+                <p><strong>P: "¿La razón de negocios es solo para temas fiscales?"</strong><br>
+                    R: No. Es principalmente operativa y económica. Sirve para explicar por qué existe una estructura.
+                    El aspecto fiscal es una consecuencia, no el origen.</p>
+
+                <p><strong>P: "¿Con facturar servicios ya hay materialidad?"</strong><br>
+                    R: La facturación por sí sola no acredita materialidad. Se analiza también quién presta el servicio,
+                    con qué personal, con qué funciones reales y con qué evidencia operativa.</p>
+
+                <p><strong>P: "¿El beneficiario controlador aplica a todas las empresas?"</strong><br>
+                    R: En términos generales existe para personas morales, pero la forma de cumplimiento depende de la
+                    estructura y de cómo se ejerce el control. (No entrar en porcentajes en público).</p>
+
+                <p><strong>P: "¿Pueden revisar mi caso?" / "¿Cómo puedo saber si necesito esto?"</strong><br>
+                    R: Durante la sesión no hacemos revisiones individuales, para eso existen los procesos de
+                    diagnóstico formal. Al final de la sesión se compartirán opciones.</p>
+
+                <p><strong>RESPUESTA ESTÁNDAR DE CIERRE:</strong><br>
+                    "Gracias por tu pregunta. Recuerda que hoy estamos viendo criterios generales. Cada estructura es
+                    distinta y se analiza de forma integral."</p>
+            </section>
+
+            <!-- PARTE 6 -->
+            <section id="parte6">
+                <h2>PARTE 6 — Checklist de Implementación</h2>
+                <p><em>(Handout para Alumnos - Interactivo)</em></p>
+
+                <h3>A) Diseño</h3>
+                <div class="checklist-item"><input type="checkbox"> Inventario de activos (marcas, inmuebles,
+                    maquinaria, cxp)</div>
+                <div class="checklist-item"><input type="checkbox"> Identificar unidades de negocio y riesgos (laboral,
+                    contractual, regulatorio)</div>
+                <div class="checklist-item"><input type="checkbox"> Definir: holding patrimonial + operativas +
+                    servicios compartidos</div>
+
+                <h3>B) Corporativo (LGSM)</h3>
+                <div class="checklist-item"><input type="checkbox"> Actas y estatutos adecuados</div>
+                <div class="checklist-item"><input type="checkbox"> Poderes notariales actualizados</div>
+                <div class="checklist-item"><input type="checkbox"> Libros corporativos al corriente</div>
+                <div class="checklist-item"><input type="checkbox"> Evaluar si se requiere transformación, fusión o
+                    escisión</div>
+
+                <h3>C) Contratos Intragrupo (Mínimos)</h3>
+                <div class="checklist-item"><input type="checkbox"> Prestación de servicios administrativos (shared
+                    services)</div>
+                <div class="checklist-item"><input type="checkbox"> Licencia de marca / regalías (si hay IP)</div>
+                <div class="checklist-item"><input type="checkbox"> Arrendamiento (si el inmueble está en la
+                    patrimonial)</div>
+                <div class="checklist-item"><input type="checkbox"> Préstamo intercompañía (si hay fondeo)</div>
+                <div class="checklist-item"><input type="checkbox"> NDA + políticas internas</div>
+
+                <h3>D) Fiscal (Grupo)</h3>
+                <div class="checklist-item"><input type="checkbox"> Evaluar si conviene el Régimen Opcional para Grupos
+                    (ISR)</div>
+                <div class="checklist-item"><input type="checkbox"> Documentación y evidencia de operaciones intragrupo
+                </div>
+                <div class="checklist-item"><input type="checkbox"> Soporte de razón de negocios por escrito</div>
+
+                <h3>E) Cumplimiento de Transparencia</h3>
+                <div class="checklist-item"><input type="checkbox"> Expediente Beneficiario Controlador (CFF) completo
+                </div>
+                <div class="checklist-item"><input type="checkbox"> Procedimientos internos para mantenerlo actualizado
+                </div>
+                <div class="checklist-item"><input type="checkbox"> Revisar implicaciones de reforma LFPIORPI 2025</div>
+            </section>
+
+            <!-- PARTE 7 -->
+            <section id="parte7">
+                <h2>PARTE 7 — Los 10 Errores Más Frecuentes</h2>
+                <ol>
+                    <li>Mezclar activos personales con activos de la empresa</li>
+                    <li>Crear el holding solo "para ahorrar impuestos" sin razón de negocios</li>
+                    <li>Contratos intragrupo sin fecha cierta ni ratificación</li>
+                    <li>Facturar servicios sin materialidad (sin personal ni evidencia)</li>
+                    <li>Holding diseñado pero nunca ejecutado operativamente</li>
+                    <li>Pacto de socios que nunca se firmó o está desactualizado</li>
+                    <li>No actualizar el expediente de beneficiario controlador ante cambios</li>
+                    <li>Gobierno corporativo informal: decisiones de palabra, sin actas</li>
+                    <li>Asumir que el contador o el abogado ya "lo tiene resuelto"</li>
+                    <li>Implementar sin diagnóstico previo</li>
+                </ol>
+            </section>
+
+            <!-- PARTE 8 -->
+            <section id="parte8">
+                <h2>PARTE 8 — Ruta 30-60-90 Días</h2>
+                <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
+                    <div
+                        style="flex: 1; min-width: 250px; background: white; border: 1px solid var(--border); border-top: 4px solid var(--accent); padding: 1.5rem; border-radius: 8px;">
+                        <h3 style="margin-top: 0;">Días 1–30: Diagnóstico y Diseño</h3>
+                        <ul>
+                            <li>Inventario completo de activos y empresas actuales</li>
+                            <li>Identificación de riesgos por unidad de negocio</li>
+                            <li>Decisión: ¿crear holding nuevo o reestructurar?</li>
+                            <li>Selección de tipo societario para cada capa</li>
+                        </ul>
+                    </div>
+                    <div
+                        style="flex: 1; min-width: 250px; background: white; border: 1px solid var(--border); border-top: 4px solid var(--gold); padding: 1.5rem; border-radius: 8px;">
+                        <h3 style="margin-top: 0;">Días 31–60: Implementación</h3>
+                        <ul>
+                            <li>Constitución / transformación de sociedades</li>
+                            <li>Estatutos, poderes y libros corporativos</li>
+                            <li>Firma y protocolización de contratos intragrupo</li>
+                            <li>Pacto de socios / protocolo familiar</li>
+                        </ul>
+                    </div>
+                    <div
+                        style="flex: 1; min-width: 250px; background: white; border: 1px solid var(--border); border-top: 4px solid var(--primary); padding: 1.5rem; border-radius: 8px;">
+                        <h3 style="margin-top: 0;">Días 61–90: Operación</h3>
+                        <ul>
+                            <li>Expediente Beneficiario Controlador completo</li>
+                            <li>Materialidad operativa: personal, evidencia</li>
+                            <li>Evaluación del Régimen Grupos ISR</li>
+                            <li>Primera revisión de gobierno corporativo</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PARTE 9 -->
+            <section id="parte9">
+                <h2>PARTE 9 — Marco Legal de Referencia</h2>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td><strong>LGSM</strong></td>
+                            <td><strong>Ley General de Sociedades Mercantiles</strong><br>Constitución, administración,
+                                asambleas, fusiones, escisiones, transformaciones.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>LISR</strong></td>
+                            <td><strong>Ley del Impuesto Sobre la Renta</strong><br>Art. 59–71 → Régimen Opcional para
+                                Grupos de Sociedades.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>CFF</strong></td>
+                            <td><strong>Código Fiscal de la Federación</strong><br>Obligación de Beneficiario
+                                Controlador (desde 2022).</td>
+                        </tr>
+                        <tr>
+                            <td><strong>SAT</strong></td>
+                            <td>Documento oficial de Preguntas y Respuestas sobre Beneficiarios Controladores.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>LFPIORPI</strong></td>
+                            <td><strong>Ley Antilavado</strong><br>Reforma publicada el 16 de julio de 2025.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- PARTE 10 -->
+            <section id="parte10">
+                <h2>PARTE 10 — Embudo Post-Evento y Diplomado</h2>
+
+                <h3>Clasificación de Leads (Por respuesta final)</h3>
+                <ul>
+                    <li><strong>1️⃣ "Necesito diagnosticar"</strong> → Lead Caliente. Seguimiento: Diagnóstico
+                        estructural (oferta).</li>
+                    <li><strong>2️⃣ "Debo regularizar/defender"</strong> → Lead Regularización. Seguimiento: Revisión y
+                        corrección.</li>
+                    <li><strong>3️⃣ "Quiero aprender"</strong> → Lead Educativo. Seguimiento: Invitación al Diplomado.
+                    </li>
+                </ul>
+
+                <h3>Lanzamiento: Diplomado en Estructuras Holding, Gobierno Corporativo y Defensa Legal-Fiscal</h3>
+                <div style="column-count: 2;">
+                    <p>M1 | Arquitectura legal del holding</p>
+                    <p>M2 | Diseño patrimonial y riesgos</p>
+                    <p>M3 | Razón de negocios y sustancia</p>
+                    <p>M4 | Fecha cierta y contratos</p>
+                    <p>M5 | Materialidad operativa y evidencia</p>
+                    <p>M6 | Gobierno corporativo y pactos</p>
+                    <p>M7 | Cumplimiento fiscal y BC</p>
+                    <p>M8 | Costos, implementación y mtto.</p>
+                </div>
+
+                <h4>Posicionamiento Correcto</h4>
+                <p><strong>NO es:</strong> Un curso fiscal aislado, teoría vacía o promesas mágicas.</p>
+                <p><strong>SÍ es:</strong> Cómo se diseña, se documenta, se ejecuta con materialidad, se gobierna y se
+                    defiende.</p>
+                <div class="quote-box">"Nuestro enfoque no es vender estructuras. Es formar criterio. Porque un
+                    empresario con criterio toma mejores decisiones, aunque no siempre nos contrate de inmediato."</div>
+            </section>
+
+            <!-- RESUMEN FRASES -->
+            <section id="frases">
+                <h2>Resumen: Frases Clave para Memorizar</h2>
+                <ul style="font-size: 1.1rem; list-style-type: square; color: var(--primary);">
+                    <li>"Legado = estructura + reglas + continuidad."</li>
+                    <li>"Los activos que generan valor no deben estar donde está el riesgo."</li>
+                    <li>"Un contrato sin fecha cierta para una autoridad simplemente no existe."</li>
+                    <li>"La razón de negocios no se improvisa en una auditoría. Se construye antes."</li>
+                    <li>"Materialidad es cuando el SAT, un juez o un socio pueden ver y tocar la operación."</li>
+                    <li>"El gobierno corporativo no controla personas. Controla escenarios futuros."</li>
+                    <li>"Planeación fiscal ≠ simulación. Todo debe documentarse y tener razón de negocios."</li>
+                    <li>"Los negocios no se pierden por falta de ganas. Se pierden por falta de estructura."</li>
+                    <li>"Tu legado se diseña."</li>
+                </ul>
+            </section>
+        </main>
+    </div>
+
+    <!-- Script to add smooth scrolling and highlight active sections -->
+    <script>
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Highlight active nav item
+        const sections = document.querySelectorAll("section");
+        const navLi = document.querySelectorAll(".sticky-nav ul li a");
+
+        window.onscroll = () => {
+            var current = "";
+            sections.forEach((section) => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 100) {
+                    current = section.getAttribute("id");
+                }
+            });
+
+            navLi.forEach((a) => {
+                a.style.color = "var(--text-main)";
+                a.style.fontWeight = "normal";
+                if (a.getAttribute("href").includes(current)) {
+                    a.style.color = "var(--accent)";
+                    a.style.fontWeight = "bold";
+                }
+            });
+        };
+    </script>
+</body>
+
+</html>
